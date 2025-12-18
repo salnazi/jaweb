@@ -40,7 +40,7 @@ $cat_query = mysqli_query($conn, $cat_sql);
                 
                 <div class="column is-4 mb-0">
                     <h2 class="title is-5 mb-2 dark:text-white uppercase">
-                        <?= htmlspecialchars($first_part) ?><span class="has-text-info"><?= htmlspecialchars($second_part) ?></span>
+                        <?= htmlspecialchars($first_part) ?> <span class="has-text-info"><?= htmlspecialchars($second_part) ?> <sup>2</sup></span>
                     </h2>
                     <p class="is-size-7 text-black dark:text-gray-400">
                         Crafting premium digital portfolios and web solutions. 
