@@ -2,7 +2,7 @@
 /**
  * Filename: footer.php
  * Logic: Slim Bulma-styled footer with dynamic settings, categories, and WhatsApp toggle.
- * Update: Added WhatsApp toggle in the right-side Connect column.
+ * Update: Integrated dynamic company_about from settings.
  */
 
 // 1. Fetch settings from jaweb_site_settings
@@ -17,9 +17,10 @@ if ($settings_query) {
 }
 
 // Map dynamic variables
-$c_name    = $SITE_DATA['company_name'] ?? 'JA SQUARE';
-$c_email   = $SITE_DATA['company_email'] ?? 'contact@jafmarketplace.in';
-$c_contact = $SITE_DATA['company_phone'] ?? '+91 84283 57459';
+$c_name      = $SITE_DATA['company_name'] ?? 'JA SQUARE';
+$c_email     = $SITE_DATA['company_email'] ?? 'contact@jafmarketplace.in';
+$c_contact   = $SITE_DATA['company_phone'] ?? '+91 84283 57459';
+$c_about     = $SITE_DATA['company_about'] ?? 'Your premier partner for digital solutions and creative web design.';
 
 // Clean phone number for WhatsApp Link (removes spaces/plus)
 $wa_number = preg_replace('/[^0-9]/', '', $c_contact);
@@ -43,8 +44,7 @@ $cat_query = mysqli_query($conn, $cat_sql);
                         <?= htmlspecialchars($first_part) ?> <span class="has-text-info"><?= htmlspecialchars($second_part) ?> <sup>2</sup></span>
                     </h2>
                     <p class="is-size-7 text-black dark:text-gray-400">
-                        Crafting premium digital portfolios and web solutions. 
-                        Elevating your brand with design and technology.
+                        <?= htmlspecialchars($c_about) ?>
                     </p>
                 </div>
 

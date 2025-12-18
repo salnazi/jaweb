@@ -2,19 +2,30 @@
 /**
  * Filename: header.php
  * Logic: Bulma Framework Implementation + Amazon Search + Logo with Centered Tagline
+ * Finalized: Dec 18, 2025
  */
 require_once 'db_config.php';
 $tp = $TABLE_PREFIX;
 
+// Fetch Navigation Menu
 $nav_sql = "SELECT title, url FROM {$tp}menus WHERE is_active = 1 ORDER BY link_id ASC";
 $nav_query = mysqli_query($conn, $nav_sql);
+
+// Map dynamic variables from site_settings (company_name and company_tagline)
+$c_full_name = $SETTINGS['company_name'] ?? 'JA SQUARE';
+$c_tagline   = $SETTINGS['company_tagline'] ?? 'Complete Web Solution';
+
+// Split Brand Logic for Logo styling (First word white, second word teal with superscript)
+$name_parts  = explode(' ', trim($c_full_name), 2);
+$first_part  = $name_parts[0] ?? 'JA';
+$second_part = $name_parts[1] ?? 'SQUARE';
 ?>
 <!DOCTYPE html>
 <html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($SETTINGS['company_name'] ?? 'JA Square') ?></title>
+    <title><?= htmlspecialchars($c_full_name) ?> | <?= htmlspecialchars($c_tagline) ?></title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -82,12 +93,13 @@ $nav_query = mysqli_query($conn, $nav_sql);
         }
         .tagline {
             display: block;
-            text-align: center; /* Ensures text is centered under the logo */
+            text-align: center;
             font-style: italic;
             font-size: 0.7rem;
             letter-spacing: 0.5px;
             margin-top: 2px;
             color: #9ca3af;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -98,10 +110,15 @@ $nav_query = mysqli_query($conn, $nav_sql);
         
         <div class="flex-shrink-0">
             <a href="index.php" class="brand-container">
-                <span class="is-size-3 has-text-weight-bold has-text-white">
-                    JA <span class="has-text-info">SQUARE <sup>2</sup></span>
+                <span class="is-size-3 has-text-weight-bold has-text-white uppercase tracking-tighter">
+                    <?= htmlspecialchars($first_part) ?> 
+                    <?php if ($second_part): ?>
+                        <span class="has-text-info">
+                            <?= htmlspecialchars($second_part) ?> <sup>2</sup>
+                        </span>
+                    <?php endif; ?>
                 </span>
-                <small class="tagline">Complete Web Solution</small>
+                <small class="tagline"><?= htmlspecialchars($c_tagline) ?></small>
             </a>
         </div>
 
@@ -120,7 +137,7 @@ $nav_query = mysqli_query($conn, $nav_sql);
         <div class="flex items-center">
             <div class="is-hidden-mobile">
                 <?php if ($nav_query): while($nav = mysqli_fetch_assoc($nav_query)): ?>
-                    <a class="px-4 has-text-white is-size-7 is-uppercase has-text-weight-semibold hover:text-tealInfo" href="<?= htmlspecialchars($nav['url']) ?>">
+                    <a class="px-4 has-text-white is-size-7 is-uppercase has-text-weight-semibold hover:text-tealInfo transition-colors" href="<?= htmlspecialchars($nav['url']) ?>">
                         <?= htmlspecialchars($nav['title']) ?>
                     </a>
                 <?php endwhile; endif; ?>

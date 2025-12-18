@@ -5,11 +5,16 @@
  * Logic Update: High-Gloss 3D button effects for Demo (Blue) and Pay & Download (Green).
  * Sidebar Update: 5 categories initial view, 5 more on click, includes live category search.
  * Rule: Final and complete code provided.
+ * Update [2025-12-18]: Integrated dynamic Hero Image/Text & removed mb-5 header.
  */
 require_once 'db_config.php';
 require_once 'header.php'; 
 
 $tp = $TABLE_PREFIX ?? 'jaweb_';
+
+// Logic: Fetch Hero dynamic settings
+$hero_img  = !empty($SETTINGS['hero_image']) ? 'img/' . $SETTINGS['hero_image'] : 'img/default_hero.jpg';
+$hero_text = $SETTINGS['hero_text'] ?? 'Tailored Solutions for Modern Problems';
 
 // 1. Logic: Fetch Categories for Sidebar
 $cat_sql = "SELECT id, name FROM {$tp}categories ORDER BY name ASC";
@@ -45,6 +50,14 @@ function slugify($text) {
 ?>
 
 <style>
+/* Hero Image Styling */
+.hero-custom {
+    background: linear-gradient(rgba(11, 14, 20, 0.8), rgba(11, 14, 20, 0.8)), url('<?= $hero_img ?>');
+    background-size: cover;
+    background-position: center;
+    padding: 100px 0;
+}
+
 /* Price Contrast logic */
 .price-text {
     font-weight: 800;
@@ -99,8 +112,7 @@ function slugify($text) {
 
 /* Glossy Green (Pay & Download) */
 .button.is-download-green { 
-    background: linear-gradient(180deg, #43e97b 0%, #38f9d7 100%) !important; /* Base logic for glossy mint/green */
-    background: linear-gradient(180deg, #22c55e 0%, #15803d 100%) !important; /* Deeper Emerald Gloss */
+    background: linear-gradient(180deg, #22c55e 0%, #15803d 100%) !important;
     color: #ffffff !important; 
 }
 .button.is-download-green:hover {
@@ -114,8 +126,10 @@ function slugify($text) {
 
 <section class="hero-custom">
     <div class="has-text-centered">
-        <h1 class="title is-1 has-text-white is-uppercase mb-2">Our Portfolio</h1>
-        <p class="subtitle is-5 has-text-info">Tailored Solutions for Modern Problems</p>
+        <h1 class="title is-1 has-text-white is-uppercase mb-2">
+            <?= htmlspecialchars($first_part) ?> <span class="has-text-info"><?= htmlspecialchars($second_part) ?></span>
+        </h1>
+        <p class="subtitle is-5 has-text-info"><?= nl2br(htmlspecialchars($hero_text)) ?></p>
     </div>
 </section>
 
@@ -161,7 +175,6 @@ function slugify($text) {
             </aside>
 
             <main class="column is-9-desktop is-8-tablet">
-                
                 <div class="columns is-multiline" id="portfolio-grid">
                     <?php 
                     if ($port_query && mysqli_num_rows($port_query) > 0): 
