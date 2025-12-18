@@ -112,6 +112,13 @@ function slugify($text) {
 #show-more-cats { cursor: pointer; font-weight: 600; font-size: 0.85rem; padding: 10px; display: inline-block; color: #2563eb; }
 </style>
 
+<section class="hero-custom">
+    <div class="has-text-centered">
+        <h1 class="title is-1 has-text-white is-uppercase mb-2">Our Portfolio</h1>
+        <p class="subtitle is-5 has-text-info">Tailored Solutions for Modern Problems</p>
+    </div>
+</section>
+
 <section class="section">
     <div class="container is-fluid px-6">
         <div class="columns is-variable is-8">
