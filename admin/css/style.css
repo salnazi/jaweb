@@ -1,0 +1,107 @@
+/**
+ * Filename: admin/css/style.css
+ * Last Update: 2025-12-17
+ * Rules: 1, 2, 9, 11
+ */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Public+Sans:wght@400;600;800&display=swap');
+
+body { 
+    font-family: 'Public Sans', sans-serif; 
+    background-color: #0f172a; 
+    color: #f1f5f9; 
+    margin: 0; 
+}
+
+.sidebar-link:hover { 
+    background: #334155; 
+    color: #38bdf8; 
+}
+
+.sidebar-link.active { 
+    background: #0ea5e9; 
+    color: #fff; 
+    font-weight: 700; 
+}
+
+.mono { 
+    font-family: 'JetBrains Mono', monospace; 
+}
+
+.power-table th { 
+    background: #1e293b; 
+    color: #94a3b8; 
+    font-size: 10px; 
+    text-transform: uppercase; 
+    letter-spacing: 0.1em; 
+    padding: 12px 16px; 
+}
+
+.power-table td { 
+    padding: 10px 16px; 
+    border-bottom: 1px solid #1e293b; 
+    font-size: 13px; 
+}
+
+.glass-panel { 
+    background: rgba(30, 41, 59, 0.7); 
+    backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255, 255, 255, 0.05); 
+}
+
+/* Scrollbar styling for a modern feel */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+/**
+ * Filename: admin/css/style.css
+ * Change: Overriding overflow-hidden logic to allow vertical scrolling
+ */
+
+/* Override the utility class if it's locking your page */
+/**
+ * Filename: admin/css/style.css
+ * Last Update: 2025-12-17
+ * Change Log: Upgraded overflow logic to allow vertical scrolling in main content area.
+ */
+
+/* Force the body to fill the screen but remain a static shell */
+body {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden !important; /* Keep the base shell locked */
+    display: flex;
+}
+
+/* Update the main container to become the scrollable region */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto !important; /* Enable the vertical scroll here */
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* Ensure the wrapper inside main doesn't collapse */
+main > .flex-1 {
+    overflow: visible !important; 
+    min-height: min-content;
+}
+
+/* Optional: Improve the scrollbar visibility for long tables */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #020617; /* slate-950 */
+}
+::-webkit-scrollbar-thumb {
+    background: #1e293b; /* slate-800 */
+    border-radius: 10px;
+    border: 2px solid #020617;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #38bdf8; /* sky-400 */
+}

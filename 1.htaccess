@@ -1,0 +1,64 @@
+# D:/xampp/htdocs/jaweb/.htaccess
+
+# ==========================================================
+# 1. CORE SETUP
+# ==========================================================
+
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Set the Base Directory
+# THIS MUST BE /jaweb/ for XAMPP setup
+RewriteBase /jaweb/
+
+# Prevent Directory Browsing (Good security practice)
+Options -Indexes
+
+# ==========================================================
+# 2. SECURITY: DENY DIRECT ACCESS TO SENSITIVE FILES (CRITICAL FIX)
+# ==========================================================
+
+# FIX: The original rule was flawed as it used 'Allow from all' which defeats the purpose.
+# The correct way to deny access is to use 'Deny from all' and ensure the <FilesMatch>
+# block is inside the <IfModule> for robustness.
+
+<FilesMatch "^(db_config\.php|db_setup\.php|db_seed_data\.php|process_contact\.php|functions\.php|maintenance\.php|header\.php|footer\.php)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# ==========================================================
+# 3. CLEAN URL REWRITES
+# ==========================================================
+
+# 3A. Home Page (Handle empty path and /home)
+# Note: L = Last rule, QSA = Query String Append (appends existing query string)
+RewriteRule ^$ index.php [L]
+RewriteRule ^home/?$ index.php [L]
+
+# 3B. Simple Static Page Rewrites (Pattern: /page-name -> page-name.php)
+RewriteRule ^about-us/?$ about-us.php [L]
+RewriteRule ^web-design/?$ web-design.php [L]
+RewriteRule ^web-hosting/?$ web-hosting.php [L]
+RewriteRule ^portfolio/?$ portfolio.php [L]
+RewriteRule ^contact-us/?$ contact-us.php [L]
+# Add Admin Redirect for convenience
+RewriteRule ^admin/?$ admin/index.php [L]
+
+
+# 3C. Portfolio Detail URL (Complex Rewrite)
+# Example URL: /jaweb/portfolio/web-design/id/123/module/details
+# Target: portfolio.php?category=web-design&id=123&module=details
+RewriteRule ^portfolio/([^/]+)/id/([^/]+)/module/([^/]+)/?$ portfolio.php?category=$1&id=$2&module=$3 [QSA,L]
+
+
+# ==========================================================
+# 4. FINAL FALLBACK (Ignore existing files/directories)
+# ==========================================================
+
+# If the request is for a real file (e.g., style.css) or directory, stop rewriting.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# If none of the above rules matched, let the system handle the rest (often resulting in a 404).
+# If you want a catch-all redirect:
+# RewriteRule ^(.*)$ index.php [L]

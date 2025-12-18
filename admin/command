@@ -1,0 +1,11 @@
+set db jasquare_app
+
+update db jasquare_app jasquare_new_app
+
+show db - display db value as jasquare_app
+
+usage db - show me like set [command] db is [fixed value parameter] jasquare_app is value
+
+add db list [list is new value]
+
+list db - show all command list

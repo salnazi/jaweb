@@ -1,0 +1,26 @@
+jaweb/
+├── admin/                  # All backend management files
+│   ├── add_portfolio.php   # Form: Add new work
+│   ├── auth_check.php      # Security: Protects admin pages
+│   ├── dashboard.php       # Home: Stats & Analytics
+│   ├── edit_portfolio.php  # Form: Update projects
+│   ├── export_leads.php    # Action: Download CSV backup
+│   ├── functions.php       # Logic: Global helpers/logging
+│   ├── index.php           # Page: Login screen
+│   ├── leads.php           # Page: Manage inquiries
+│   ├── logout.php          # Action: Ends session
+│   ├── menus.php           # Page: Manage navigation
+│   ├── optimize.php        # Action: DB Maintenance
+│   ├── portfolio.php       # Page: Project list/search
+│   ├── settings.php        # Page: Site configuration
+│   └── users.php           # Page: Team management
+│
+├── uploads/                # Main storage folder
+│   └── portfolio/          # Subfolder for project images
+│
+├── contact-process.php      # Logic: Lead handling/Email alerts
+├── db_config.php            # Config: Database & Global Settings
+├── index.php                # Frontend: The Homepage
+├── portfolio-details.php    # Frontend: Individual project view
+├── README.txt               # Documentation: Manual & Setup
+└── .htaccess                # (Optional) For clean URLs and security
