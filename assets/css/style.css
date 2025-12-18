@@ -1,0 +1,71 @@
+/**
+ * Project: JA Square Digital Portfolio
+ * File: assets/css/style.css
+ * Logic: Merged Bulma + Tailwind Theme Logic
+ */
+
+/* 1. Global Transitions */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+}
+
+.is-sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+/* 2. Bulma Specific Overrides */
+.button.is-ghost:focus, .button.is-ghost:active {
+    background: transparent;
+    color: #00f2fe;
+}
+
+/* 3. Hero Section (300px) */
+.hero-custom {
+    height: 300px;
+    background: linear-gradient(rgba(11, 14, 20, 0.75), rgba(11, 14, 20, 0.75)), 
+                url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white !important;
+}
+
+/* 4. Sidebar Nav (Bulma Menu Logic) */
+.menu-list a {
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: all 0.2s ease;
+}
+
+.light .menu-list a:hover, .light .menu-list a.is-active {
+    background-color: #f0f2f5;
+    color: #00f2fe;
+}
+
+.dark .menu-list a:hover, .dark .menu-list a.is-active {
+    background-color: #161b22;
+    color: #00f2fe;
+}
+
+/* 5. WhatsApp Float */
+.wa-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    color: white !important;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}

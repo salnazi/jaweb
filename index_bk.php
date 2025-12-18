@@ -1,9 +1,8 @@
 <?php
 /**
  * Filename: index.php
- * Logic: Removed Top Search/Sort.
- * Logic Update: High-Gloss 3D button effects for Demo (Blue) and Pay & Download (Green).
- * Sidebar Update: 5 categories initial view, 5 more on click, includes live category search.
+ * Logic: Removed Strictly Dynamic Width Badge CSS logic.
+ * Logic Update: Dual buttons (Demo and Pay & Download) in card footer.
  * Rule: Final and complete code provided.
  */
 require_once 'db_config.php';
@@ -15,8 +14,15 @@ $tp = $TABLE_PREFIX ?? 'jaweb_';
 $cat_sql = "SELECT id, name FROM {$tp}categories ORDER BY name ASC";
 $cat_query = mysqli_query($conn, $cat_sql);
 
-// 2. Logic: Fetch Portfolio (Default Descending)
-$port_sql = "SELECT p.* FROM {$tp}portfolio AS p ORDER BY p.id DESC";
+// 2. Logic: Fetch Portfolio (JOIN p.category = c.name)
+$search = $_GET['search'] ?? '';
+$search_query = "";
+if (!empty($search)) {
+    $s = mysqli_real_escape_string($conn, $search);
+    $search_query = " AND (p.title LIKE '%$s%' OR p.description LIKE '%$s%')";
+}
+
+$port_sql = "SELECT p.* FROM {$tp}portfolio AS p WHERE 1=1 $search_query ORDER BY p.id DESC";
 $port_query = mysqli_query($conn, $port_sql);
 
 /**
@@ -64,53 +70,36 @@ function slugify($text) {
 }
 .light .portfolio-card { background: #ffffff; border: 1px solid #efefef; }
 .dark .portfolio-card { background: #161b22; border: 1px solid #30363d; }
-.portfolio-card:hover { transform: translateY(-5px); }
 
-/* Sidebar Search logic */
-.sidebar-search-container { margin-bottom: 15px; }
-.sidebar-search-input { font-size: 0.85rem; border-radius: 3px !important; }
+.portfolio-card:hover {
+    transform: translateY(-5px);
+}
 
 /* Badge Wrapper logic */
-.badge-container { display: flex; flex-wrap: wrap; gap: 8px; }
+.badge-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
 
-/* --- GLOSSY BUTTON LOGIC --- */
-.action-buttons { display: flex; gap: 10px; width: 100%; }
-.action-buttons .button { 
+/* Button Row logic */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+.action-buttons .button {
     flex: 1; 
-    border-radius: 3px; 
-    border: none; 
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.2);
-    text-shadow: 0 1px 1px rgba(0,0,0,0.3);
-    transition: all 0.2s ease;
+    border-radius: 3px;
 }
-.action-buttons .button:active {
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-    transform: translateY(1px);
-}
-
-/* Glossy Blue (Demo) */
-.button.is-demo-blue { 
-    background: linear-gradient(180deg, #4facfe 0%, #0061ff 100%) !important;
-    color: #ffffff !important; 
-}
-.button.is-demo-blue:hover {
-    background: linear-gradient(180deg, #60b5ff 0%, #1a75ff 100%) !important;
-}
-
-/* Glossy Green (Pay & Download) */
-.button.is-download-green { 
-    background: linear-gradient(180deg, #43e97b 0%, #38f9d7 100%) !important; /* Base logic for glossy mint/green */
-    background: linear-gradient(180deg, #22c55e 0%, #15803d 100%) !important; /* Deeper Emerald Gloss */
-    color: #ffffff !important; 
-}
-.button.is-download-green:hover {
-    background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%) !important;
-}
-
-/* Sidebar Category Logic */
-.cat-item.is-hidden-load, .cat-item.is-filtered-out { display: none; }
-#show-more-cats { cursor: pointer; font-weight: 600; font-size: 0.85rem; padding: 10px; display: inline-block; color: #2563eb; }
 </style>
+
+<section class="hero-custom">
+    <div class="has-text-centered">
+        <h1 class="title is-1 has-text-white is-uppercase mb-2">Our Portfolio</h1>
+        <p class="subtitle is-5 has-text-info">Tailored Solutions for Modern Problems</p>
+    </div>
+</section>
 
 <section class="section">
     <div class="container is-fluid px-6">
@@ -118,14 +107,8 @@ function slugify($text) {
             
             <aside class="column is-3-desktop is-4-tablet">
                 <div class="menu cat-sidebar">
-                    <p class="menu-label has-text-weight-bold mb-2">Categories</p>
-                    
-                    <div class="sidebar-search-container control has-icons-left">
-                        <input class="input sidebar-search-input" type="text" id="cat-search-box" placeholder="Find category...">
-                        <span class="icon is-small is-left"><i class="fas fa-filter"></i></span>
-                    </div>
-
-                    <ul class="menu-list" id="category-list">
+                    <p class="menu-label has-text-weight-bold mb-4">Categories</p>
+                    <ul class="menu-list">
                         <li>
                             <a href="#" class="filter-trigger is-active" data-filter="all">
                                 <span class="icon-text">
@@ -134,27 +117,18 @@ function slugify($text) {
                                 </span>
                             </a>
                         </li>
-                        <?php 
-                        $counter = 0;
-                        if ($cat_query): while($cat = mysqli_fetch_assoc($cat_query)): 
-                            $counter++;
-                            $hiddenClass = ($counter > 5) ? 'is-hidden-load' : '';
-                        ?>
-                            <li class="cat-item <?= $hiddenClass ?>">
+                        <?php if ($cat_query): while($cat = mysqli_fetch_assoc($cat_query)): ?>
+                            <li>
                                 <a href="#" class="filter-trigger" data-filter="filter-<?= slugify($cat['name']) ?>">
                                     <?= htmlspecialchars($cat['name']) ?>
                                 </a>
                             </li>
                         <?php endwhile; endif; ?>
                     </ul>
-                    <?php if ($counter > 5): ?>
-                        <a id="show-more-cats"><i class="fas fa-plus-circle mr-1"></i> Show More</a>
-                    <?php endif; ?>
                 </div>
             </aside>
 
             <main class="column is-9-desktop is-8-tablet">
-                
                 <div class="columns is-multiline" id="portfolio-grid">
                     <?php 
                     if ($port_query && mysqli_num_rows($port_query) > 0): 
@@ -181,7 +155,9 @@ function slugify($text) {
                                     
                                     <?php if(!empty($row['price'])): ?>
                                         <div class="mb-3">
-                                            <span class="price-text">₹<?= number_format($row['price'], 0) ?></span>
+                                            <span class="price-text">
+                                                ₹<?= number_format($row['price'], 0) ?>
+                                            </span>
                                         </div>
                                     <?php endif; ?>
 
@@ -189,10 +165,35 @@ function slugify($text) {
                                         <?= substr(strip_tags($row['description'] ?? ''), 0, 85) ?>...
                                     </div>
                                     
+                                    <?php 
+                                    if(!empty($row['seo_tag'])): 
+                                        $tags = explode(',', $row['seo_tag']);
+                                        echo '<div class="badge-container mb-4">';
+                                        foreach($tags as $tag): 
+                                            $trimmedTag = trim($tag);
+                                            if($trimmedTag !== ''):
+                                                $tagStyle = getStrictBadgeStyle($trimmedTag);
+                                    ?>
+                                        <span class="tag is-small" style="background-color: <?= $tagStyle['bg'] ?>; color: <?= $tagStyle['text'] ?>; border-radius: 3px;">
+                                            <i class="fas fa-tag"></i>&nbsp;&nbsp;<?= htmlspecialchars($trimmedTag) ?>
+                                        </span>
+                                    <?php 
+                                            endif;
+                                        endforeach; 
+                                        echo '</div>';
+                                    endif; 
+                                    ?>
+                                    
                                     <footer class="pt-3 mt-auto border-t dark:border-gray-800">
                                         <div class="action-buttons">
-                                            <a href="<?= htmlspecialchars($row['demo_url'] ?? '#') ?>" class="button is-small is-demo-blue has-text-weight-bold">Demo</a>
-                                            <a href="checkout.php?id=<?= $row['id'] ?>" class="button is-small is-download-green has-text-weight-bold">Pay & Download</a>
+                                            <a href="<?= htmlspecialchars($row['demo_url'] ?? '#') ?>" 
+                                               class="button is-small is-link is-outlined has-text-weight-bold">
+                                                Demo
+                                            </a>
+                                            <a href="checkout.php?id=<?= $row['id'] ?>" 
+                                               class="button is-small is-primary has-text-weight-bold">
+                                                Pay & Download
+                                            </a>
                                         </div>
                                     </footer>
                                 </div>
@@ -200,57 +201,14 @@ function slugify($text) {
                         </div>
                     <?php endwhile; else: ?>
                         <div class="column is-12 has-text-centered py-6">
-                            <p class="is-size-5 has-text-grey">No projects found.</p>
+                            <p class="is-size-5 has-text-grey">No projects found in this category.</p>
                         </div>
                     <?php endif; ?>
                 </div>
             </main>
+
         </div>
     </div>
 </section>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const showMoreBtn = document.getElementById('show-more-cats');
-    const catSearchBox = document.getElementById('cat-search-box');
-    const catItems = document.querySelectorAll('.cat-item');
-
-    catSearchBox.addEventListener('input', function() {
-        const filterText = this.value.toLowerCase();
-        if (filterText.length > 0) {
-            if (showMoreBtn) showMoreBtn.style.display = 'none';
-            catItems.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                if (text.includes(filterText)) {
-                    item.classList.remove('is-hidden-load', 'is-filtered-out');
-                } else {
-                    item.classList.add('is-filtered-out');
-                }
-            });
-        } else {
-            if (showMoreBtn) showMoreBtn.style.display = 'inline-block';
-            catItems.forEach((item, index) => {
-                item.classList.remove('is-filtered-out');
-                if (index >= 5) {
-                    item.classList.add('is-hidden-load');
-                }
-            });
-        }
-    });
-
-    if (showMoreBtn) {
-        showMoreBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const hiddenItems = document.querySelectorAll('.cat-item.is-hidden-load');
-            for (let i = 0; i < 5; i++) {
-                if (hiddenItems[i]) hiddenItems[i].classList.remove('is-hidden-load');
-            }
-            if (document.querySelectorAll('.cat-item.is-hidden-load').length === 0) {
-                showMoreBtn.style.display = 'none';
-            }
-        });
-    }
-});
-</script>
 
 <?php require_once 'footer.php'; ?>
